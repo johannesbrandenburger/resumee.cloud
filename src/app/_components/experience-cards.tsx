@@ -19,13 +19,13 @@ export function ExperienceCards({ items }: ExperienceCardsProps) {
   return (
     <BentoGrid2 className="max-w-4xl mx-auto mt-4 h-full">
 
-      {items.map((item, i) => {
+      {items?.map((item, i) => {
 
         let itemClassname = "min-h-0 w-full h-full bg-white/70 dark:bg-black/70 border-black/[0.1]";
         itemClassname += " md:col-span-3";
 
         let itemHeader = (
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full dark:text-white">
             <p className="text-sm mb-2">{item.cityAndCountry}</p>
             <p className="text-sm mb-2">{item.from} - {item.to}</p>
 

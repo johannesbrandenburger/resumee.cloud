@@ -36,7 +36,7 @@ export function EducationCards({ items }: EducationCardsProps) {
   return (
     <BentoGrid className="max-w-4xl mx-auto mt-4 h-full">
 
-      {items.map((item, i) => {
+      {items?.map((item, i) => {
 
         let itemClassname = "min-h-0 w-full h-full bg-white/70 dark:bg-black/70 border-black/[0.1]";
         if (item.thesis) {
@@ -46,7 +46,7 @@ export function EducationCards({ items }: EducationCardsProps) {
         }
 
         let itemHeader = (
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full dark:text-neutral-200">
             <p className="text-sm">{item.university}</p>
             <p className="text-sm mb-2">{item.cityAndCountry}</p>
             <p className="text-sm mb-2">{item.from} - {item.expected ? "Expected " + item.expected : item.to}</p>
@@ -57,10 +57,9 @@ export function EducationCards({ items }: EducationCardsProps) {
         );
 
         let itemIconAndGrade = (
-          // nebeneinander
-          <div className="flex">
+          <div className="flex dark:text-neutral-200">
             <div className="mr-1">{item.expected ? <IconProgress color="blue"/> : <IconCertificate2 color="green"/>}</div>
-            {item.gradePointAverage && <p className="">{item.expected && "Curr. "}Avg: {item.gradePointAverage}</p>}
+            {item.gradePointAverage && <p className="dark:text-neutral-200">{item.expected && "Curr. "}Avg: {item.gradePointAverage}</p>}
           </div>
         );
 
