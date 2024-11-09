@@ -38,7 +38,7 @@ export function ResumeFormComponent({ slug }: ResumeFormProps = {}) {
     projects: []
   }
 
-  const [data] = slug ? api.resume.getBySlug.useSuspenseQuery(slug) : [emptyData]
+  const [data] = (slug ? api.resume.getBySlug.useSuspenseQuery(slug) : [emptyData]) as any
 
   const [formData, setFormData] = useState(data)
 
@@ -61,11 +61,11 @@ export function ResumeFormComponent({ slug }: ResumeFormProps = {}) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData((prev: any) => ({ ...prev, [name]: value }))
   }
 
-  const handleArrayInputChange = (index: number, field: string, subfield: string, value: string) => {
-    setFormData(prev => {
+  const handleArrayInputChange = (index: number, field: string, subfield: string, value: string | string[]) => {
+    setFormData((prev: { [x: string]: any }) => {
       const newArray = [...prev[field]]
       newArray[index] = { ...newArray[index], [subfield]: value }
       return { ...prev, [field]: newArray }
@@ -73,13 +73,13 @@ export function ResumeFormComponent({ slug }: ResumeFormProps = {}) {
   }
 
   const addArrayItem = (field: string) => {
-    setFormData(prev => ({ ...prev, [field]: [...prev[field], {}] }))
+    setFormData((prev: { [x: string]: any }) => ({ ...prev, [field]: [...prev[field], {}] }))
   }
 
   const removeArrayItem = (field: string, index: number) => {
-    setFormData(prev => ({
+    setFormData((prev: { [x: string]: any[] }) => ({
       ...prev,
-      [field]: prev[field].filter((_: any, i: number) => i !== index)
+      [field]: prev[field]?.filter((_: any, i: number) => i !== index)
     }))
   }
 

@@ -30,12 +30,24 @@ export function ResumePage({ user }: { user: string }) {
     <>
       <BackgroundAnimation>
         <div className="mx-2">
-          <Title preName={data.preName} lastName={data.lastName} objective={data.objective} avatar={data.avatar} />
-          <ContactButtons telephone={data.telephone} email={data.email} github={data.github} linkedin={data.linkedin} website={data.website} />
+          <Title preName={data.preName ?? ""} lastName={data.lastName ?? ""} objective={data.objective ?? ""} avatar={data.avatar ?? ""} />
+          <ContactButtons 
+            telephone={data.telephone ?? ""} 
+            email={data.email ?? ""} 
+            github={data.github ?? ""} 
+            linkedin={data.linkedin ?? ""} 
+            website={data.website ?? ""} 
+          />
           <DownloadProfessionalResumeButton filename={`resume-${data.preName.toLowerCase()}-${data.lastName.toLowerCase()}.pdf`} />
 
           <SectionHeading>Education</SectionHeading>
-          <EducationCards items={data.education} />
+          <EducationCards items={data.education.map(edu => ({
+            ...edu,
+            expected: edu.expected ?? undefined,
+            gradePointAverage: edu.gradePointAverage ?? undefined,
+            thesis: edu.thesis ?? undefined,
+            thesisGrade: edu.thesisGrade ?? undefined
+          }))} />
 
           <SectionHeading>Skills</SectionHeading>
           <Skills topics={data.skills} />
@@ -44,12 +56,17 @@ export function ResumePage({ user }: { user: string }) {
           <ExperienceCards items={data.experience} />
 
           <SectionHeading>Projects</SectionHeading>
-          <ProjectCards items={data.projects} />
+          <ProjectCards items={data.projects.map(project => ({
+            name: project.name,
+            description: project.description,
+            image: project.image ?? undefined,
+            github: project.github ?? undefined,
+            demo: project.demo ?? undefined
+          }))} />
 
           <SectionHeading>Extracurricular Activities</SectionHeading>
-          <ExtracurricularActivities extracurricularActivities={data.extracurricularActivities} />
-
-          <ImpressumButton link={data.impressum} />
+          <ExtracurricularActivities extracurricularActivities={data.extracurricular ?? []} />
+          <ImpressumButton link={data.impressum ?? ""} />
         </div>
 
       </BackgroundAnimation>
