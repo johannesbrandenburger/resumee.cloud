@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import Link from "next/link";
 
 import { LatestPost } from "~/app/_components/post";
@@ -5,6 +6,12 @@ import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
+
+  // get the subdomain from the request
+  const allHeaders = await headers();
+  const host = allHeaders.get("host");
+  const subdomain = host?.split(".").length && host?.split(".").length > 1 ? host?.split(".")[0] : null;
+
   const hello = await api.post.hello({ text: "from tRPC" });
   const session = await auth();
 
