@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { api } from "~/trpc/react";
 
-export function LatestPost() {
+export function ResumePage({ user }: { user: string }) {
   const [latestPost] = api.post.getLatest.useSuspenseQuery();
 
   const utils = api.useUtils();
