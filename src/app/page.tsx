@@ -11,7 +11,10 @@ export default async function Home() {
   // get the subdomain from the request
   const allHeaders = await headers();
   const host = allHeaders.get("host");
-  const subdomain = host?.split(".").length && host?.split(".").length > 1 ? host?.split(".")[0] : null;
+  let subdomain = host?.split(".").length && host?.split(".").length > 1 ? host?.split(".")[0] : null;
+  if (subdomain === "resumee") {
+    subdomain = null;
+  }
 
 
   if (subdomain) {
