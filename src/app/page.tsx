@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ResumePage } from "~/app/_components/resume-page";
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
+import { ResumeFormComponent } from "./_components/resume-form";
 
 export default async function Home() {
 
@@ -25,7 +26,15 @@ export default async function Home() {
   const session = await auth();
 
   if (session?.user) {
-    // void api.post.getLatest.prefetch();
+
+    const userResumeSlug = await api.resume.getSlugByUserId() ?? undefined;
+    console.log({ userResumeSlug });
+    
+    return (
+      <HydrateClient>
+        <ResumeFormComponent slug={userResumeSlug} />
+      </HydrateClient>
+    );
   }
 
   return (

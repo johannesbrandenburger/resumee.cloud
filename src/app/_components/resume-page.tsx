@@ -16,7 +16,7 @@ import ExtracurricularActivities from "~/app/_components/extracurricular-activit
 import { api } from "~/trpc/react";
 
 export function ResumePage({ user }: { user: string }) {
-  const [data] = api.resume.getResumeBySlug.useSuspenseQuery(user);
+  const [data] = api.resume.getBySlug.useSuspenseQuery(user);
   const utils = api.useUtils();
   const [name, setName] = useState("");
 
@@ -24,6 +24,8 @@ export function ResumePage({ user }: { user: string }) {
     return <div>Loading...</div>;
   }
 
+  console.log({ data });
+  
   return (
     <>
       <BackgroundAnimation>

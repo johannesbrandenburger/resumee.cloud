@@ -34,25 +34,12 @@ model Resume {
   impressum        String?
 
   // Related entities
-  coverLetter      CoverLetter?
   education        Education[]
   skills           SkillGroup[]
   experience       Experience[]
   projects         Project[]
   extracurricular  String[]
   newPageBefore    String[]
-}
-
-model CoverLetter {
-  id              String   @id @default(cuid())
-  resume          Resume   @relation(fields: [resumeId], references: [slug])
-  resumeId        String   @unique
-  company         String
-  companyAddress  String
-  position        String
-  salutation      String
-  text            String
-  closing         String
 }
 
 model Education {
