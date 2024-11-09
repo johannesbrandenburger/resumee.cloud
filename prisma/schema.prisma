@@ -14,16 +14,92 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+model Resume {
+  // slug should be the unique identifier for the resume for example prename-lastname
+  slug             String      @id @unique
+  user             User        @relation(fields: [userId], references: [id])
+  userId           String      @unique
+  avatar           String?
+  preName          String
+  lastName         String
+  telephone        String?
+  email            String
+  cityAndCountry   String?
+  github           String?
+  linkedin         String?
+  website          String?
+  objective        String?
+  domain           String?
+  impressum        String?
 
-    @@index([name])
+  // Related entities
+  coverLetter      CoverLetter?
+  education        Education[]
+  skills           SkillGroup[]
+  experience       Experience[]
+  projects         Project[]
+  extracurricular  String[]
+  newPageBefore    String[]
+}
+
+model CoverLetter {
+  id              String   @id @default(cuid())
+  resume          Resume   @relation(fields: [resumeId], references: [slug])
+  resumeId        String   @unique
+  company         String
+  companyAddress  String
+  position        String
+  salutation      String
+  text            String
+  closing         String
+}
+
+model Education {
+  id              String   @id @default(cuid())
+  resume          Resume   @relation(fields: [resumeId], references: [slug])
+  resumeId        String
+  degree          String
+  fieldOfStudy    String
+  university      String
+  cityAndCountry  String
+  from            String
+  to              String
+  expected        String?
+  gradePointAverage String?
+  thesis          String?
+  thesisGrade     String?
+}
+
+model SkillGroup {
+  id              String   @id @default(cuid())
+  resume          Resume   @relation(fields: [resumeId], references: [slug])
+  resumeId        String
+  field           String
+  entities        String[]
+}
+
+model Experience {
+  id              String   @id @default(cuid())
+  resume          Resume   @relation(fields: [resumeId], references: [slug])
+  resumeId        String
+  position        String
+  company         String
+  cityAndCountry  String
+  from            String
+  to              String
+  infos           String[]
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  resume          Resume   @relation(fields: [resumeId], references: [slug])
+  resumeId        String
+  name            String
+  description     String
+  image           String?
+  github          String?
+  demo            String?
 }
 
 // Necessary for Next auth
@@ -62,7 +138,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
+    resume        Resume?  // TODO!
 }
 
 model VerificationToken {
