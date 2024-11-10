@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import Link from "next/link";
 
-import { ResumePage } from "~/app/_components/resume-page";
+import { ResumePage } from "~/app/_components/resume/ResumePage";
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 import { ResumeFormComponent } from "./_components/resume-form";
