@@ -17,56 +17,35 @@ import { api } from "~/trpc/react";
 
 export function ResumePage({ user }: { user: string }) {
   const [data] = api.resume.getBySlug.useSuspenseQuery(user);
-  const utils = api.useUtils();
-  const [name, setName] = useState("");
-
+  
   if (!data) {
     return <div>Loading...</div>;
   }
-
-  console.log({ data });
   
   return (
     <>
       <BackgroundAnimation>
         <div className="mx-2">
-          <Title preName={data.preName ?? ""} lastName={data.lastName ?? ""} objective={data.objective ?? ""} avatar={data.avatar ?? ""} />
-          <ContactButtons 
-            telephone={data.telephone ?? ""} 
-            email={data.email ?? ""} 
-            github={data.github ?? ""} 
-            linkedin={data.linkedin ?? ""} 
-            website={data.website ?? ""} 
-          />
-          <DownloadProfessionalResumeButton filename={`resume-${data.preName.toLowerCase()}-${data.lastName.toLowerCase()}.pdf`} />
+          <Title preName={data.preName} lastName={data.lastName} objective={data.objective} avatar={data.avatar} />
+          <ContactButtons telephone={data.telephone} email={data.email} github={data.github} linkedin={data.linkedin} website={data.website} />
+          {/* <DownloadProfessionalResumeButton filename={`resume-${data.preName.toLowerCase()}-${data.lastName.toLowerCase()}.pdf`} /> TODO: not yet implemented */}
 
-          <SectionHeading>Education</SectionHeading>
-          <EducationCards items={data.education.map(edu => ({
-            ...edu,
-            expected: edu.expected ?? undefined,
-            gradePointAverage: edu.gradePointAverage ?? undefined,
-            thesis: edu.thesis ?? undefined,
-            thesisGrade: edu.thesisGrade ?? undefined
-          }))} />
+          <SectionHeading visible={data.education?.length > 0}>Education</SectionHeading>
+          <EducationCards items={data.education} />
 
-          <SectionHeading>Skills</SectionHeading>
+          <SectionHeading visible={data.skills?.length > 0}>Skills</SectionHeading>
           <Skills topics={data.skills} />
 
-          <SectionHeading>Experience</SectionHeading>
+          <SectionHeading visible={data.experience?.length > 0}>Experience</SectionHeading>
           <ExperienceCards items={data.experience} />
 
-          <SectionHeading>Projects</SectionHeading>
-          <ProjectCards items={data.projects.map(project => ({
-            name: project.name,
-            description: project.description,
-            image: project.image ?? undefined,
-            github: project.github ?? undefined,
-            demo: project.demo ?? undefined
-          }))} />
+          <SectionHeading visible={data.projects?.length > 0}>Projects</SectionHeading>
+          <ProjectCards items={data.projects} />
 
-          <SectionHeading>Extracurricular Activities</SectionHeading>
-          <ExtracurricularActivities extracurricularActivities={data.extracurricular ?? []} />
-          <ImpressumButton link={data.impressum ?? ""} />
+          <SectionHeading visible={data.extracurricular?.length > 0}>Extracurricular Activities</SectionHeading>
+          <ExtracurricularActivities extracurricularActivities={data.extracurricular} />
+
+          <ImpressumButton link={data.impressum} />
         </div>
 
       </BackgroundAnimation>

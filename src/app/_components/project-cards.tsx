@@ -9,9 +9,9 @@ type EducationCardsProps = {
   items: {
     name: string;
     description: string;
-    image?: string;
-    github?: string;
-    demo?: string;
+    image: string | null | undefined;
+    github: string | null | undefined;
+    demo: string | null | undefined;
   }[];
 
 };

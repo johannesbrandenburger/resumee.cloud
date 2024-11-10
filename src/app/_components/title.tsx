@@ -7,14 +7,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/app/_components/ui/avatar
 type TitleProps = {
     preName: string;
     lastName: string;
-    objective: string;
-    avatar?: string;
+    objective: string | null | undefined;
+    avatar: string | null | undefined;
 };
 
 export default function Title({ preName, lastName, objective, avatar }: TitleProps) {
 
     // replace markdown style links "[link text](url)" with next links
-    const objectiveWithLinks = replaceMdWithNextLinks(objective);
+    const objectiveWithLinks = objective ? replaceMdWithNextLinks(objective) : "";
 
     return (
         <>

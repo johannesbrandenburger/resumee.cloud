@@ -4,11 +4,11 @@ import { IconBrandGithub, IconBrandLinkedin, IconDownload, IconGlobe, IconMail, 
 import Link from 'next/link'
 
 type ContactButtonsProps = {
-    telephone: string;
-    email: string;
-    github: string;
-    linkedin: string;
-    website: string;
+    telephone: string | null | undefined;
+    email: string | null | undefined;
+    github: string | null | undefined;
+    linkedin: string | null | undefined;
+    website: string | null | undefined;
 };
 
 export default function ContactButtons({ telephone, email, github, linkedin, website }: ContactButtonsProps) {

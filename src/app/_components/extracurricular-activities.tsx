@@ -5,7 +5,7 @@ import { replaceMdWithNextLinks } from "~/utils/replace-md-with-next-links";
 
 
 type ExtracurricularActivitiesProps = {
-    extracurricularActivities: string[];
+    extracurricularActivities: string[] | null | undefined;
 };
 
 export default function ExtracurricularActivities({ extracurricularActivities }: ExtracurricularActivitiesProps) {

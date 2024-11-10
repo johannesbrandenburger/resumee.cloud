@@ -13,25 +13,15 @@ type EducationCardsProps = {
     cityAndCountry: string;
     from: string;
     to: string;
-    expected?: string;
-    gradePointAverage?: string;
-    thesis?: string;
-    thesisGrade?: string;
+    expected: string | null | undefined;
+    gradePointAverage: string | null | undefined;
+    thesis: string | null | undefined;
+    thesisGrade: string | null | undefined;
   }[];
 
 };
 
 export function EducationCards({ items }: EducationCardsProps) {
-
-  //     "degree": "Bachelor of Science",
-  //     "fieldOfStudy": "Computer Science (Information Technology)",
-  //     "university": "DHBW Ravensburg (Cooperative State University)",
-  //     "cityAndCountry": "Ravensburg, Germany",
-  //     "from": "2020",
-  //     "to": "2023",
-  //     "gradePointAverage": "1.3",
-  //     "thesis": "Zentrale Plattform für die Analyse und Verwaltung der Code-Sicherheit in Unternehmenssoftwaresystemen",
-  //     "thesisGrade": "1.0"
 
   return (
     <BentoGrid className="max-w-4xl mx-auto mt-4 h-full">

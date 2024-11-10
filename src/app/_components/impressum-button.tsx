@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 
 type ImpressumButtonProps = {
-    link: string;
+    link: string | null | undefined;
 };
 
 export default function ImpressumButton({ link }: ImpressumButtonProps) {
