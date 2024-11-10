@@ -2,16 +2,16 @@
 
 import { Suspense } from "react";
 import { LoadingSpinner } from "~/app/_components/loading/LoadingSpinner";
-import { ResumeContent } from "~/app/_components/resume/ResumeContent";
+import ResumeForm from "./ResumeForm";
 
 interface ResumePageProps {
-  user: string;
+  slug?: string;
 }
 
-export function ResumePage({ user }: ResumePageProps) {
+export function ResumeFormPage({ slug }: ResumePageProps) {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <ResumeContent user={user} />
+      <ResumeForm slug={slug} />
     </Suspense>
   );
 }
