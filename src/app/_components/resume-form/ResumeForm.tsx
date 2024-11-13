@@ -177,6 +177,52 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                 <Input name="lastName" value={resumeForm.lastName} onChange={(e) => setResumeForm({ ...resumeForm, lastName: e.target.value })} />
               </Label>
             </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Label>
+                Email
+                <Input name="email" value={resumeForm.email} onChange={(e) => setResumeForm({ ...resumeForm, email: e.target.value })} />
+              </Label>
+              <Label>
+                Telephone
+                <Input name="telephone" value={resumeForm.telephone} onChange={(e) => setResumeForm({ ...resumeForm, telephone: e.target.value })} />
+              </Label>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Label>
+                City and Country
+                <Input name="cityAndCountry" value={resumeForm.cityAndCountry} onChange={(e) => setResumeForm({ ...resumeForm, cityAndCountry: e.target.value })} />
+              </Label>
+              <Label>
+                Website
+                <Input name="website" value={resumeForm.website} onChange={(e) => setResumeForm({ ...resumeForm, website: e.target.value })} />
+              </Label>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Label>
+                GitHub
+                <Input name="github" value={resumeForm.github} onChange={(e) => setResumeForm({ ...resumeForm, github: e.target.value })} />
+              </Label>
+              <Label>
+                LinkedIn
+                <Input name="linkedin" value={resumeForm.linkedin} onChange={(e) => setResumeForm({ ...resumeForm, linkedin: e.target.value })} />
+              </Label>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              <Label>
+                Objective
+                <Textarea name="objective" value={resumeForm.objective} onChange={(e) => setResumeForm({ ...resumeForm, objective: e.target.value })} />
+              </Label>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Label>
+                Domain
+                <Input name="domain" value={resumeForm.domain} onChange={(e) => setResumeForm({ ...resumeForm, domain: e.target.value })} />
+              </Label>
+              <Label>
+                Impressum
+                <Input name="impressum" value={resumeForm.impressum} onChange={(e) => setResumeForm({ ...resumeForm, impressum: e.target.value })} />
+              </Label>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -184,41 +230,85 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
       <Card className="m-4">
         <CardContent>
           <div>
-            <Tabs value='Education'>
+            <Tabs defaultValue="Education">
               <TabsList className="flex space-x-4 mt-4">
                 <TabsTrigger value="Education">Education</TabsTrigger>
+                <TabsTrigger value="Experience">Experience</TabsTrigger>
+                <TabsTrigger value="Skills">Skills</TabsTrigger>
               </TabsList>
+
               <TabsContent value="Education">
                 <div>
                   {resumeForm.education.map((item, index) => {
                     if (item.flag === "deleted") return null
                     return (
                       <Card key={index} className="mt-4">
-                        <CardContent key={index} className="space-y-4 p-4">
+                        <CardContent className="space-y-4 p-4">
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
-                            City and Country
-                            <Input name="cityAndCountry" value={item.cityAndCountry} onChange={(e) => {
-                              console.log(resumeForm.education)
-                              setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, cityAndCountry: e.target.value } : education) })
-                            }} />
-                          </Label>
-                          <Label>
-                            Degree
-                            <Input name="degree" value={item.degree} onChange={(e) => {
-                              setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, degree: e.target.value } : education) })
-                            }} />
-                          </Label>
-                        </div>
-                        <Button variant="destructive" onClick={() => {
-                          if (item.id === "") {
-                            setResumeForm({ ...resumeForm, education: resumeForm.education.filter((education, i) => i !== index) })
-                            return
-                          }
-                          setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, flag: "deleted" } : education) })
-                        }}><Trash2 size={24}/></Button>
-                      </CardContent>
-                    </Card>
+                              City and Country
+                              <Input name="cityAndCountry" value={item.cityAndCountry} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, cityAndCountry: e.target.value } : education) })
+                              }} />
+                            </Label>
+                            <Label>
+                              Degree
+                              <Input name="degree" value={item.degree} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, degree: e.target.value } : education) })
+                              }} />
+                            </Label>
+                          </div>
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Label>
+                              Field of Study
+                              <Input name="fieldOfStudy" value={item.fieldOfStudy} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, fieldOfStudy: e.target.value } : education) })
+                              }} />
+                            </Label>
+                            <Label>
+                              University
+                              <Input name="university" value={item.university} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, university: e.target.value } : education) })
+                              }} />
+                            </Label>
+                          </div>
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Label>
+                              From
+                              <Input type="date" name="from" value={item.from} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, from: e.target.value } : education) })
+                              }} />
+                            </Label>
+                            <Label>
+                              To
+                              <Input type="date" name="to" value={item.to} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, to: e.target.value } : education) })
+                              }} />
+                            </Label>
+                          </div>
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Label>
+                              Grade Point Average
+                              <Input name="gradePointAverage" value={item.gradePointAverage ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, gradePointAverage: e.target.value } : education) })
+                              }} />
+                            </Label>
+                            <Label>
+                              Thesis
+                              <Input name="thesis" value={item.thesis ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, thesis: e.target.value } : education) })
+                              }} />
+                            </Label>
+                          </div>
+                          <Button variant="destructive" onClick={() => {
+                            if (item.id === "") {
+                              setResumeForm({ ...resumeForm, education: resumeForm.education.filter((education, i) => i !== index) })
+                              return
+                            }
+                            setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, flag: "deleted" } : education) })
+                          }}><Trash2 size={24} /></Button>
+                        </CardContent>
+                      </Card>
                     )
                   })}
                   <div className="flex justify-center">
