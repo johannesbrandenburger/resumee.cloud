@@ -150,6 +150,12 @@ export const resumeRouter = createTRPCRouter({
       return ctx.db.resume.update({
         where: { slug: input.slug },
         data: input,
+        include: {
+          education: true,
+          skills: true,
+          experience: true,
+          projects: true,
+        },
       });
     }),
 
