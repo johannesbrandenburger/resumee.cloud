@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/app/_components/ui/c
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/app/_components/ui/tabs"
 import { PlusCircle, Trash2 } from 'lucide-react'
 import { api } from "~/trpc/react"
+import { LoadingSpinner } from '../loading/LoadingSpinner';
 
 type ResumeFormProps = {
   slug?: string
@@ -38,6 +39,7 @@ type ResumeFormState = {
     thesis: string | null;
     thesisGrade: string | null;
     expected: string | null;
+    flag?: "deleted";
   }[];
   experience: {
     id: string;
@@ -56,7 +58,7 @@ type ResumeFormState = {
 
 export default function ResumeForm({ slug }: ResumeFormProps = {}) {
   // TRPC Queries and Mutations
-  const { data: resume } = api.resume.getBySlug.useQuery(slug ?? "", { enabled: !!slug })
+  let { data: resume } = api.resume.getBySlug.useQuery(slug ?? "", { enabled: !!slug })
   const updateResume = api.resume.update.useMutation()
   const addEducation = api.resume.addEducation.useMutation()
   const addSkillGroup = api.resume.addSkillGroup.useMutation()
@@ -98,15 +100,65 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
     }
   }, [resume])
 
+  // Save changes
+  const saveChanges = async () => {
+
+    setIsLoading(true)
+    let hasChanges = false
+
+    // update the education (1. case: a existing education was updated, 2. case: a new education was added (id is empty), 3. case: a education was deleted (flag = "deleted"))
+    for (let education of resumeForm.education) {
+      if (education.flag === "deleted") {
+        hasChanges = true
+        await deleteEducation.mutateAsync({ resumeSlug: slug ?? "", educationId: education.id })
+      } else if (education.id === "") {
+        hasChanges = true
+        await addEducation.mutateAsync({ resumeSlug: slug ?? "", education: { ...education, id: undefined } })
+      } else {
+        let educationFieldsChanged = {}
+        const prevEducation = resume?.education.find((e) => e.id === education.id)
+        for (let key in education) {
+          if (["id", "flag", "resumeId"].includes(key)) continue
+          if (education[key] !== prevEducation[key]) {
+            educationFieldsChanged[key] = education[key]
+          }
+        }
+        if (Object.keys(educationFieldsChanged).length > 0) {
+          hasChanges = true
+          await updateEducation.mutateAsync({ resumeSlug: slug ?? "", educationId: education.id, education: educationFieldsChanged })
+        }
+      }
+    }
+
+    // update the general informations (only the one that changed)
+    let generalInformationsChanged = {}
+    const excludeFields = ["education", "experience", "skills"]
+    for (let key in resumeForm) {
+      if (excludeFields.includes(key)) continue
+      if (resumeForm[key] !== resume[key]) {
+        hasChanges = true
+        generalInformationsChanged[key] = resumeForm[key]
+      }
+    }
+
+    // only perform the update if there are changes (also perform it if non-general informations changed (to get the updated data))
+    if (hasChanges) {
+      const newData = await updateResume.mutateAsync({ slug: slug ?? "", ...generalInformationsChanged })
+      resume = newData
+      setResumeForm(newData)
+    }
+
+    setIsLoading(false)
+  }
+
   if (isLoading) {
-    return <div>Loading...</div>
+    return <LoadingSpinner />
   }
 
   return (
     <div className="space-y-4">
       <div className="fixed bottom-0 right-0 p-4">
-        <Button onClick={() => {
-        }} className="w-full">Save</Button>
+        <Button onClick={saveChanges} className="w-full">Save</Button>
       </div>
 
       <Card>
@@ -131,23 +183,35 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
               </TabsList>
               <TabsContent value="Education">
                 <div>
-                  {resumeForm.education.map((item, index) => (
-                    <div key={index} className="space-y-4">
-                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <Label>
-                          City and Country
-                          <Input name="cityAndCountry" value={item.cityAndCountry} onChange={(e) => setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, cityAndCountry: e.target.value } : education) })} />
-                        </Label>
-                        <Label>
-                          Degree
-                          <Input name="degree" value={item.degree} onChange={(e) => setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, degree: e.target.value } : education) })} />
-                        </Label>
+                  {resumeForm.education.map((item, index) => {
+                    if (item.flag === "deleted") return null
+                    return (
+                      <div key={index} className="space-y-4">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                          <Label>
+                            City and Country
+                            <Input name="cityAndCountry" value={item.cityAndCountry} onChange={(e) => {
+                              console.log(resumeForm.education)
+                              setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, cityAndCountry: e.target.value } : education) })
+                            }} />
+                          </Label>
+                          <Label>
+                            Degree
+                            <Input name="degree" value={item.degree} onChange={(e) => {
+                              setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, degree: e.target.value } : education) })
+                            }} />
+                          </Label>
+                        </div>
+                        <Button onClick={() => {
+                          if (item.id === "") {
+                            setResumeForm({ ...resumeForm, education: resumeForm.education.filter((education, i) => i !== index) })
+                            return
+                          }
+                          setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, flag: "deleted" } : education) })
+                        }}><Trash2 size={24} /></Button>
                       </div>
-                      <Button onClick={() => {
-                        setResumeForm({ ...resumeForm, education: resumeForm.education.filter((_, i) => i !== index) })
-                      }}><Trash2 size={24} /></Button>
-                    </div>
-                  ))}
+                    )
+                  })}
                   <Button onClick={() => {
                     setResumeForm({ ...resumeForm, education: [...resumeForm.education, { id: "", cityAndCountry: "", degree: "", fieldOfStudy: "", university: "", from: "", to: "", gradePointAverage: "", thesis: "", thesisGrade: "", expected: "" }] })
                   }}><PlusCircle size={24} /></Button>
