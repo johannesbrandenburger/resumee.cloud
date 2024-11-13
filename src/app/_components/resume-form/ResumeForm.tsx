@@ -158,12 +158,12 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
   return (
     <div className="space-y-4">
       <div className="fixed bottom-0 right-0 p-4">
-        <Button onClick={saveChanges} className="w-full">Save</Button>
+        <Button variant="default" onClick={saveChanges} className="w-full">Save</Button>
       </div>
 
-      <Card>
+      <Card className="m-4">
         <CardHeader>
-          <CardTitle>Resume</CardTitle>
+          <CardTitle>General Information</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -177,8 +177,15 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                 <Input name="lastName" value={resumeForm.lastName} onChange={(e) => setResumeForm({ ...resumeForm, lastName: e.target.value })} />
               </Label>
             </div>
-            <Tabs>
-              <TabsList>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="m-4">
+        <CardContent>
+          <div>
+            <Tabs value='Education'>
+              <TabsList className="flex space-x-4 mt-4">
                 <TabsTrigger value="Education">Education</TabsTrigger>
               </TabsList>
               <TabsContent value="Education">
@@ -186,9 +193,10 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                   {resumeForm.education.map((item, index) => {
                     if (item.flag === "deleted") return null
                     return (
-                      <div key={index} className="space-y-4">
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                          <Label>
+                      <Card key={index} className="mt-4">
+                        <CardContent key={index} className="space-y-4 p-4">
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Label>
                             City and Country
                             <Input name="cityAndCountry" value={item.cityAndCountry} onChange={(e) => {
                               console.log(resumeForm.education)
@@ -202,19 +210,26 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                             }} />
                           </Label>
                         </div>
-                        <Button onClick={() => {
+                        <Button variant="destructive" onClick={() => {
                           if (item.id === "") {
                             setResumeForm({ ...resumeForm, education: resumeForm.education.filter((education, i) => i !== index) })
                             return
                           }
                           setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, flag: "deleted" } : education) })
-                        }}><Trash2 size={24} /></Button>
-                      </div>
+                        }}><Trash2 size={24}/></Button>
+                      </CardContent>
+                    </Card>
                     )
                   })}
-                  <Button onClick={() => {
-                    setResumeForm({ ...resumeForm, education: [...resumeForm.education, { id: "", cityAndCountry: "", degree: "", fieldOfStudy: "", university: "", from: "", to: "", gradePointAverage: "", thesis: "", thesisGrade: "", expected: "" }] })
-                  }}><PlusCircle size={24} /></Button>
+                  <div className="flex justify-center">
+                    <Button
+                      variant="default"
+                      className="mt-4"
+                      onClick={() => {
+                        setResumeForm({ ...resumeForm, education: [...resumeForm.education, { id: "", cityAndCountry: "", degree: "", fieldOfStudy: "", university: "", from: "", to: "", gradePointAverage: "", thesis: "", thesisGrade: "", expected: "" }] })
+                      }}><PlusCircle size={24} />
+                    </Button>
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>
