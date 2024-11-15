@@ -53,8 +53,6 @@ const createResumeSchema = z.object({
   linkedin: z.string().optional(),
   website: z.string().optional(),
   objective: z.string().optional(),
-  domain: z.string().optional(),
-  impressum: z.string().optional(),
   avatar: z.string().optional(),
   extracurricular: z.array(z.string()),
   newPageBefore: z.array(z.string()),

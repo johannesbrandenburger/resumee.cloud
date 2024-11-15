@@ -30,8 +30,6 @@ model Resume {
   linkedin         String?
   website          String?
   objective        String?
-  domain           String?
-  impressum        String?
 
   // Related entities
   education        Education[]

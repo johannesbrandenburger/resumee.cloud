@@ -27,8 +27,6 @@ type ResumeFormState = {
   linkedin: string | null
   website: string | null
   objective: string | null
-  domain: string | null
-  impressum: string | null
   education: {
     id: string;
     cityAndCountry: string;
@@ -89,8 +87,6 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
     linkedin: "",
     website: "",
     objective: "",
-    domain: "",
-    impressum: "",
     education: [],
     experience: [],
     skills: []
@@ -293,16 +289,6 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
               <Label>
                 Objective
                 <Textarea name="objective" value={resumeForm.objective ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, objective: e.target.value })} />
-              </Label>
-            </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <Label>
-                Domain
-                <Input name="domain" value={resumeForm.domain ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, domain: e.target.value })} />
-              </Label>
-              <Label>
-                Impressum
-                <Input name="impressum" value={resumeForm.impressum ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, impressum: e.target.value })} />
               </Label>
             </div>
           </div>
