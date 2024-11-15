@@ -12,6 +12,7 @@ import { api } from "~/trpc/react"
 import { LoadingSpinner } from '~/app/_components/loading/LoadingSpinner';
 import StringListInput from '~/app/_components/string-list-input';
 import { useQueryState } from 'nuqs'
+import Link from 'next/link';
 
 type ResumeFormProps = {
   slug?: string
@@ -275,11 +276,20 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
     return <LoadingSpinner />
   }
 
+  const linkToResume = process.env.NODE_ENV === "development" ? `http://${slug}.localhost:3000` : `https://${slug}.resumee.cloud`
+  const prettierLinkToResume = linkToResume.replace(/(https?:\/\/)/, "")
+
   return (
     <div className="space-y-4">
       <div className="fixed bottom-0 right-0 p-4">
         <Button variant="default" onClick={saveChanges} className="w-full">Save</Button>
       </div>
+
+      <Card className="m-4">
+        <CardHeader>
+          <CardTitle>Your resume is available at: <span className="text-blue-500"><Link href={linkToResume}>{prettierLinkToResume}</Link></span></CardTitle>
+        </CardHeader>
+      </Card>
 
       <Card className="m-4">
         <CardHeader>
