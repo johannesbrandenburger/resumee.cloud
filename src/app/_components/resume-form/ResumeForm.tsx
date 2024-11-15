@@ -57,6 +57,15 @@ type ResumeFormState = {
     entities: string[];
     flag?: "deleted";
   }[];
+  projects: {
+    id: string;
+    name: string;
+    description: string;
+    image: string | null;
+    github: string | null;
+    demo: string | null;
+    flag?: "deleted";
+  }[];
 }
 
 export default function ResumeForm({ slug }: ResumeFormProps = {}) {
@@ -89,7 +98,8 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
     objective: "",
     education: [],
     experience: [],
-    skills: []
+    skills: [],
+    projects: []
   } as ResumeFormState)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -136,7 +146,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         for (let key in education) {
           if (["id", "flag", "resumeId"].includes(key)) continue
           const typedKey = key as keyof EducationFields;
-          if (education[typedKey] !== (prevEducation as typeof education | undefined)?.[typedKey]) {
+          if (education[typedKey] !== (prevEducation as typeof education)?.[typedKey]) {
             educationFieldsChanged[typedKey] = education[typedKey] === null ? undefined : education[typedKey]
           }
         }
@@ -169,7 +179,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         for (let key in experience) {
           if (["id", "flag", "resumeId"].includes(key)) continue
           const typedKey = key as keyof ExperienceFields;
-          if (experience[typedKey] !== (prevExperience as typeof experience | undefined)?.[typedKey]) {
+          if (experience[typedKey] !== (prevExperience as typeof experience)?.[typedKey]) {
             if (typedKey === 'infos') {
               experienceFieldsChanged[typedKey] = experience[typedKey] === null ? undefined : experience[typedKey] as string[];
             } else {
@@ -204,6 +214,38 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         if (Object.keys(skillFieldsChanged).length > 0) {
           hasChanges = true
           await updateSkillGroup.mutateAsync({ resumeSlug: slug ?? "", skillGroupId: skill.id, skillGroup: skillFieldsChanged })
+        }
+      }
+    }
+
+    // update the projects (1. case: a existing project was updated, 2. case: a new project was added (id is empty), 3. case: a project was deleted (flag = "deleted"))
+    for (let project of resumeForm.projects) {
+      if (project.flag === "deleted") {
+        hasChanges = true
+        await deleteProject.mutateAsync({ resumeSlug: slug ?? "", projectId: project.id })
+      } else if (project.id === "") {
+        hasChanges = true
+        await addProject.mutateAsync({ resumeSlug: slug ?? "", project: { ...project } })
+      } else {
+        type ProjectFields = {
+          name?: string;
+          description?: string;
+          image?: string;
+          github?: string;
+          demo?: string;
+        }
+        let projectFieldsChanged: ProjectFields = {}
+        const prevProject = resume?.projects.find((p) => p.id === project.id)
+        for (let key in project) {
+          if (["id", "flag", "resumeId"].includes(key)) continue
+          const typedKey = key as keyof ProjectFields;
+          if (project[typedKey] !== (prevProject as typeof project | undefined)?.[typedKey]) {
+            projectFieldsChanged[typedKey] = project[typedKey] === null ? undefined : project[typedKey]
+          }
+        }
+        if (Object.keys(projectFieldsChanged).length > 0) {
+          hasChanges = true
+          await updateProject.mutateAsync({ resumeSlug: slug ?? "", projectId: project.id, project: projectFieldsChanged })
         }
       }
     }
@@ -303,6 +345,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                 <TabsTrigger className="text-l font-semibold" value="Education">Education</TabsTrigger>
                 <TabsTrigger className="text-l font-semibold" value="Experience">Experience</TabsTrigger>
                 <TabsTrigger className="text-l font-semibold" value="Skills">Skills</TabsTrigger>
+                <TabsTrigger className="text-l font-semibold" value="Projects">Projects</TabsTrigger>
               </TabsList>
 
               <TabsContent value="Education">
@@ -497,6 +540,65 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                       className="mt-4"
                       onClick={() => {
                         setResumeForm({ ...resumeForm, skills: [...resumeForm.skills, { id: "", field: "", entities: [] }] });
+                      }}><PlusCircle size={24} />
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="Projects">
+                <div>
+                  {resumeForm.projects.map((item, index) => {
+                    if (item.flag === "deleted") return null
+                    return (
+                      <Card key={index} className="mt-4">
+                        <CardContent className="space-y-4 p-4">
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Label>
+                              Name
+                              <Input name="name" value={item.name ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, name: e.target.value } : project) })
+                              }} />
+                            </Label>
+                            <Label>
+                              Description
+                              <Textarea name="description" value={item.description ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, description: e.target.value } : project) })
+                              }} />
+                            </Label>
+                          </div>
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Label>
+                              Image
+                              <Input name="image" value={item.image ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, image: e.target.value } : project) })
+                              }} />
+                            </Label>
+                            <Label>
+                              GitHub
+                              <Input name="github" value={item.github ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, github: e.target.value } : project) })
+                              }} />
+                            </Label>
+                            <Label>
+                              Demo
+                              <Input name="demo" value={item.demo ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, demo: e.target.value } : project) })
+                              }} />
+                            </Label>
+                          </div>
+                          <Button variant="destructive" onClick={() => {
+                            setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, flag: "deleted" } : project) })
+                          }}><Trash2 size={24} /></Button>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                  <div className="flex justify-center">
+                    <Button
+                      variant="default"
+                      className="mt-4"
+                      onClick={() => {
+                        setResumeForm({ ...resumeForm, projects: [...resumeForm.projects, { id: "", name: "", description: "", image: "", github: "", demo: "" }] })
                       }}><PlusCircle size={24} />
                     </Button>
                   </div>
