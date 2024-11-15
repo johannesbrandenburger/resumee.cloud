@@ -73,7 +73,7 @@ export function ProjectCards({ items }: EducationCardsProps) {
                     onClick={pressOnItem}
                   >
                     <NextImage
-                      src={"/gen/" + item.image}
+                      src={item.image}
                       height="1000"
                       width="1000"
                       className="w-full h-full object-contain group-hover/card:shadow-xl rounded-xl"

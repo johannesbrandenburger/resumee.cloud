@@ -11,8 +11,12 @@ import { PlusCircle, Trash2 } from 'lucide-react'
 import { api } from "~/trpc/react"
 import { LoadingSpinner } from '~/app/_components/loading/LoadingSpinner';
 import StringListInput from '~/app/_components/string-list-input';
+import { Base64ImageInput } from '~/app/_components/base64-image-input'
+import { Base64ImageViewer } from '~/app/_components/base64-image-viewer'
+
 import { useQueryState } from 'nuqs'
 import Link from 'next/link';
+import { Avatar, AvatarImage } from '../ui/avatar';
 
 type ResumeFormProps = {
   slug?: string
@@ -28,6 +32,7 @@ type ResumeFormState = {
   linkedin: string | null
   website: string | null
   objective: string | null
+  avatar: string | null
   education: {
     id: string;
     cityAndCountry: string;
@@ -97,6 +102,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
     linkedin: "",
     website: "",
     objective: "",
+    avatar: "",
     education: [],
     experience: [],
     skills: [],
@@ -180,7 +186,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         for (let key in experience) {
           if (["id", "flag", "resumeId"].includes(key)) continue
           const typedKey = key as keyof ExperienceFields;
-            if (JSON.stringify(experience[typedKey]) !== JSON.stringify((prevExperience as typeof experience)?.[typedKey])) {
+          if (JSON.stringify(experience[typedKey]) !== JSON.stringify((prevExperience as typeof experience)?.[typedKey])) {
             if (typedKey === 'infos') {
               experienceFieldsChanged[typedKey] = experience[typedKey] === null ? undefined : experience[typedKey] as string[];
             } else {
@@ -240,7 +246,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         for (let key in project) {
           if (["id", "flag", "resumeId"].includes(key)) continue
           const typedKey = key as keyof ProjectFields;
-            if (JSON.stringify(project[typedKey]) !== JSON.stringify((prevProject as typeof project)?.[typedKey])) {
+          if (JSON.stringify(project[typedKey]) !== JSON.stringify((prevProject as typeof project)?.[typedKey])) {
             projectFieldsChanged[typedKey] = project[typedKey] === null ? undefined : project[typedKey]
           }
         }
@@ -342,6 +348,17 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                 Objective
                 <Textarea name="objective" value={resumeForm.objective ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, objective: e.target.value })} />
               </Label>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Label>
+                Avatar
+                <Base64ImageInput value={resumeForm.avatar ?? ''} onChange={(avatar) => setResumeForm({ ...resumeForm, avatar })} />
+              </Label>
+              {resumeForm.avatar && (
+                <Avatar>
+                  <AvatarImage src={resumeForm.avatar ?? ''} />
+                </Avatar>
+              )}
             </div>
           </div>
         </CardContent>
@@ -579,10 +596,11 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               Image
-                              <Input name="image" value={item.image ?? ''} onChange={(e) => {
-                                setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, image: e.target.value } : project) })
+                              <Base64ImageInput value={item.image ?? ''} onChange={(image) => {
+                                setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, image } : project) })
                               }} />
                             </Label>
+                            {item.image && <Base64ImageViewer value={item.image ?? ''} />}
                             <Label>
                               GitHub
                               <Input name="github" value={item.github ?? ''} onChange={(e) => {
@@ -618,6 +636,6 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </div >
   )
 }

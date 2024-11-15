@@ -26,7 +26,7 @@ export default function Title({ preName, lastName, objective, avatar }: TitlePro
             </p>
             { avatar && 
                 <Avatar className="mx-auto mt-4">
-                    <AvatarImage src={"/gen/" + avatar} alt={`${preName} ${lastName}`} />
+                    <AvatarImage src={avatar} alt={`${preName} ${lastName}`} />
                     <AvatarFallback>
                         {preName[0]}{lastName[0]}
                     </AvatarFallback>
