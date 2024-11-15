@@ -7,7 +7,7 @@ import { Textarea } from "~/app/_components/ui/textarea"
 import { Label } from "~/app/_components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "~/app/_components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/app/_components/ui/tabs"
-import { PlusCircle, Trash2 } from 'lucide-react'
+import { PlusCircle, Save, Trash2 } from 'lucide-react'
 import { api } from "~/trpc/react"
 import { LoadingSpinner } from '~/app/_components/loading/LoadingSpinner';
 import StringListInput from '~/app/_components/string-list-input';
@@ -93,7 +93,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
   const deleteProject = api.resume.deleteProject.useMutation()
 
   // State for tracking changes
-  const [resumeForm, setResumeForm] = useState({
+  const [resumeForm, setResumeForm_] = useState({
     preName: "",
     lastName: "",
     email: "",
@@ -111,6 +111,11 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
     extracurricular: []
   } as ResumeFormState)
   const [isLoading, setIsLoading] = useState(true)
+  const [hasChanged, setHasChanged] = useState(false)
+  const setResumeForm = (resumeForm: ResumeFormState) => {
+    setResumeForm_(resumeForm)
+    setHasChanged(true)
+  }
 
   // url query state for navigation (tabs)
   const [tab, setTab] = useQueryState("tab", { defaultValue: "Education" })
@@ -118,10 +123,38 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
   // Load resume data
   useEffect(() => {
     if (resume) {
-      setResumeForm(resume)
+      setResumeForm_(resume)
       setIsLoading(false)
     }
   }, [resume])
+
+  // eventlistener for unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasChanged) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [hasChanged])
+
+  // eventlistener for meta + s to save changes
+  useEffect(() => {
+    const handleSaveShortcut = (e: KeyboardEvent) => {
+      if (e.metaKey && e.key === 's') {
+        e.preventDefault()
+        saveChanges()
+      }
+    }
+    window.addEventListener('keydown', handleSaveShortcut)
+    return () => {
+      window.removeEventListener('keydown', handleSaveShortcut)
+    }
+  }, [hasChanged, resumeForm])
 
   // Save changes
   const saveChanges = async () => {
@@ -276,7 +309,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
       resume = newData
       setResumeForm(newData)
     }
-
+    setHasChanged(false)
     setIsLoading(false)
   }
 
@@ -289,9 +322,16 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
 
   return (
     <div className="space-y-4">
-      <div className="fixed bottom-0 right-0 p-4">
-        <Button variant="default" onClick={saveChanges} className="w-full">Save</Button>
-      </div>
+      {hasChanged && (
+        <div className="fixed bottom-0 right-0 p-4">
+          <Button
+            variant="default"
+            onClick={saveChanges}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+            >Save<Save className="ml-2" />
+            </Button>
+        </div>
+      )}
 
       <Card className="m-4">
         <CardHeader>
@@ -370,12 +410,12 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         <CardContent>
           <div>
             <Tabs value={tab} onValueChange={(value) => setTab(value)}>
-              <TabsList className="flex space-x-4 mt-4">
-                <TabsTrigger className="text-l font-semibold" value="Education">Education</TabsTrigger>
-                <TabsTrigger className="text-l font-semibold" value="Experience">Experience</TabsTrigger>
-                <TabsTrigger className="text-l font-semibold" value="Skills">Skills</TabsTrigger>
-                <TabsTrigger className="text-l font-semibold" value="Projects">Projects</TabsTrigger>
-                <TabsTrigger className="text-l font-semibold" value="Extracurricular Activities">Extracurricular Activities</TabsTrigger>
+              <TabsList className="flex flex-wrap gap-2 mt-4">
+                <TabsTrigger className="text-sm font-semibold" value="Education">Education</TabsTrigger>
+                <TabsTrigger className="text-sm font-semibold" value="Experience">Experience</TabsTrigger>
+                <TabsTrigger className="text-sm font-semibold" value="Skills">Skills</TabsTrigger>
+                <TabsTrigger className="text-sm font-semibold" value="Projects">Projects</TabsTrigger>
+                <TabsTrigger className="text-sm font-semibold" value="Extracurricular Activities">Extracurricular Activities</TabsTrigger>
               </TabsList>
 
               <TabsContent value="Education">
