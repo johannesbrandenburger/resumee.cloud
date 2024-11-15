@@ -146,7 +146,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         for (let key in education) {
           if (["id", "flag", "resumeId"].includes(key)) continue
           const typedKey = key as keyof EducationFields;
-          if (education[typedKey] !== (prevEducation as typeof education)?.[typedKey]) {
+          if (JSON.stringify(education[typedKey]) !== JSON.stringify((prevEducation as typeof education)?.[typedKey])) {
             educationFieldsChanged[typedKey] = education[typedKey] === null ? undefined : education[typedKey]
           }
         }
@@ -179,7 +179,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         for (let key in experience) {
           if (["id", "flag", "resumeId"].includes(key)) continue
           const typedKey = key as keyof ExperienceFields;
-          if (experience[typedKey] !== (prevExperience as typeof experience)?.[typedKey]) {
+            if (JSON.stringify(experience[typedKey]) !== JSON.stringify((prevExperience as typeof experience)?.[typedKey])) {
             if (typedKey === 'infos') {
               experienceFieldsChanged[typedKey] = experience[typedKey] === null ? undefined : experience[typedKey] as string[];
             } else {
@@ -207,7 +207,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         const prevSkill = resume?.skills.find((s) => s.id === skill.id)
         for (let key in skill) {
           if (["id", "flag", "resumeId"].includes(key)) continue
-          if (skill[key] !== prevSkill[key]) {
+          if (JSON.stringify(skill[key]) !== JSON.stringify((prevSkill as typeof skill)?.[key])) {
             skillFieldsChanged[key] = skill[key]
           }
         }
@@ -239,7 +239,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         for (let key in project) {
           if (["id", "flag", "resumeId"].includes(key)) continue
           const typedKey = key as keyof ProjectFields;
-          if (project[typedKey] !== (prevProject as typeof project | undefined)?.[typedKey]) {
+            if (JSON.stringify(project[typedKey]) !== JSON.stringify((prevProject as typeof project)?.[typedKey])) {
             projectFieldsChanged[typedKey] = project[typedKey] === null ? undefined : project[typedKey]
           }
         }

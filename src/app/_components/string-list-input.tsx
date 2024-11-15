@@ -51,7 +51,10 @@ export default function StringListInput({ value = [], onChange }: StringListInpu
           <Button
             variant="outline"
             size="icon"
-            onClick={() => handleRemove(index)}
+            onClick={(e) => {
+              e.preventDefault()
+              handleRemove(index)
+            }}
             aria-label={`Remove item ${index + 1}`}
           >
             <X className="h-4 w-4" />
