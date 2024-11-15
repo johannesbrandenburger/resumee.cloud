@@ -2,134 +2,130 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
-
 
 model Resume {
   // slug should be the unique identifier for the resume for example prename-lastname
-  slug             String      @id @unique
-  user             User        @relation(fields: [userId], references: [id])
-  userId           String      @unique
-  avatar           String?
-  preName          String
-  lastName         String
-  telephone        String?
-  email            String
-  cityAndCountry   String?
-  github           String?
-  linkedin         String?
-  website          String?
-  objective        String?
+  slug           String  @id @unique
+  user           User    @relation(fields: [userId], references: [id])
+  userId         String  @unique
+  avatar         String?
+  preName        String
+  lastName       String
+  telephone      String?
+  email          String
+  cityAndCountry String?
+  github         String?
+  linkedin       String?
+  website        String?
+  objective      String?
 
   // Related entities
-  education        Education[]
-  skills           SkillGroup[]
-  experience       Experience[]
-  projects         Project[]
-  extracurricular  String[]
-  newPageBefore    String[]
+  education       Education[]
+  skills          SkillGroup[]
+  experience      Experience[]
+  projects        Project[]
+  extracurricular String[]
+  newPageBefore   String[]
 }
 
 model Education {
-  id              String   @id @default(cuid())
-  resume          Resume   @relation(fields: [resumeId], references: [slug])
-  resumeId        String
-  degree          String
-  fieldOfStudy    String
-  university      String
-  cityAndCountry  String
-  from            String
-  to              String
-  expected        String?
+  id                String  @id @default(cuid())
+  resume            Resume  @relation(fields: [resumeId], references: [slug])
+  resumeId          String
+  degree            String
+  fieldOfStudy      String
+  university        String
+  cityAndCountry    String
+  from              String
+  to                String
+  expected          String?
   gradePointAverage String?
-  thesis          String?
-  thesisGrade     String?
+  thesis            String?
+  thesisGrade       String?
 }
 
 model SkillGroup {
-  id              String   @id @default(cuid())
-  resume          Resume   @relation(fields: [resumeId], references: [slug])
-  resumeId        String
-  field           String
-  entities        String[]
+  id       String   @id @default(cuid())
+  resume   Resume   @relation(fields: [resumeId], references: [slug])
+  resumeId String
+  field    String
+  entities String[]
 }
 
 model Experience {
-  id              String   @id @default(cuid())
-  resume          Resume   @relation(fields: [resumeId], references: [slug])
-  resumeId        String
-  position        String
-  company         String
-  cityAndCountry  String
-  from            String
-  to              String
-  infos           String[]
+  id             String   @id @default(cuid())
+  resume         Resume   @relation(fields: [resumeId], references: [slug])
+  resumeId       String
+  position       String
+  company        String
+  cityAndCountry String
+  from           String
+  to             String
+  infos          String[]
 }
 
 model Project {
-  id              String   @id @default(cuid())
-  resume          Resume   @relation(fields: [resumeId], references: [slug])
-  resumeId        String
-  name            String
-  description     String
-  image           String?
-  github          String?
-  demo            String?
+  id          String  @id @default(cuid())
+  resume      Resume  @relation(fields: [resumeId], references: [slug])
+  resumeId    String
+  name        String
+  description String
+  image       String?
+  github      String?
+  demo        String?
 }
 
 // Necessary for Next auth
 model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String? // @db.Text
-    access_token             String? // @db.Text
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String? // @db.Text
-    session_state            String?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    refresh_token_expires_in Int?
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? // @db.Text
+  access_token             String? // @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? // @db.Text
+  session_state            String?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refresh_token_expires_in Int?
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    resume        Resume?  // TODO!
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  resume        Resume? // TODO!
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
