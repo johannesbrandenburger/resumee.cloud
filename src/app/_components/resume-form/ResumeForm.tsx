@@ -9,8 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/app/_components/ui/c
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/app/_components/ui/tabs"
 import { PlusCircle, Trash2 } from 'lucide-react'
 import { api } from "~/trpc/react"
-import { LoadingSpinner } from '../loading/LoadingSpinner';
-import StringListInput from '../string-list-input';
+import { LoadingSpinner } from '~/app/_components/loading/LoadingSpinner';
+import StringListInput from '~/app/_components/string-list-input';
 import { useQueryState } from 'nuqs'
 
 type ResumeFormProps = {
@@ -226,57 +226,57 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 Prename
-                <Input name="preName" value={resumeForm.preName} onChange={(e) => setResumeForm({ ...resumeForm, preName: e.target.value })} />
+                <Input name="preName" value={resumeForm.preName ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, preName: e.target.value })} />
               </Label>
               <Label>
                 Lastname
-                <Input name="lastName" value={resumeForm.lastName} onChange={(e) => setResumeForm({ ...resumeForm, lastName: e.target.value })} />
+                <Input name="lastName" value={resumeForm.lastName ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, lastName: e.target.value })} />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 Email
-                <Input name="email" value={resumeForm.email} onChange={(e) => setResumeForm({ ...resumeForm, email: e.target.value })} />
+                <Input name="email" value={resumeForm.email ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, email: e.target.value })} />
               </Label>
               <Label>
                 Telephone
-                <Input name="telephone" value={resumeForm.telephone} onChange={(e) => setResumeForm({ ...resumeForm, telephone: e.target.value })} />
+                <Input name="telephone" value={resumeForm.telephone ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, telephone: e.target.value })} />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 City and Country
-                <Input name="cityAndCountry" value={resumeForm.cityAndCountry} onChange={(e) => setResumeForm({ ...resumeForm, cityAndCountry: e.target.value })} />
+                <Input name="cityAndCountry" value={resumeForm.cityAndCountry ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, cityAndCountry: e.target.value })} />
               </Label>
               <Label>
                 Website
-                <Input name="website" value={resumeForm.website} onChange={(e) => setResumeForm({ ...resumeForm, website: e.target.value })} />
+                <Input name="website" value={resumeForm.website ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, website: e.target.value })} />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 GitHub
-                <Input name="github" value={resumeForm.github} onChange={(e) => setResumeForm({ ...resumeForm, github: e.target.value })} />
+                <Input name="github" value={resumeForm.github ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, github: e.target.value })} />
               </Label>
               <Label>
                 LinkedIn
-                <Input name="linkedin" value={resumeForm.linkedin} onChange={(e) => setResumeForm({ ...resumeForm, linkedin: e.target.value })} />
+                <Input name="linkedin" value={resumeForm.linkedin ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, linkedin: e.target.value })} />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4">
               <Label>
                 Objective
-                <Textarea name="objective" value={resumeForm.objective} onChange={(e) => setResumeForm({ ...resumeForm, objective: e.target.value })} />
+                <Textarea name="objective" value={resumeForm.objective ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, objective: e.target.value })} />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 Domain
-                <Input name="domain" value={resumeForm.domain} onChange={(e) => setResumeForm({ ...resumeForm, domain: e.target.value })} />
+                <Input name="domain" value={resumeForm.domain ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, domain: e.target.value })} />
               </Label>
               <Label>
                 Impressum
-                <Input name="impressum" value={resumeForm.impressum} onChange={(e) => setResumeForm({ ...resumeForm, impressum: e.target.value })} />
+                <Input name="impressum" value={resumeForm.impressum ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, impressum: e.target.value })} />
               </Label>
             </div>
           </div>
@@ -288,9 +288,9 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
           <div>
             <Tabs value={tab} onValueChange={(value) => setTab(value)}>
               <TabsList className="flex space-x-4 mt-4">
-                <TabsTrigger value="Education">Education</TabsTrigger>
-                <TabsTrigger value="Experience">Experience</TabsTrigger>
-                <TabsTrigger value="Skills">Skills</TabsTrigger>
+                <TabsTrigger className="text-l font-semibold" value="Education">Education</TabsTrigger>
+                <TabsTrigger className="text-l font-semibold" value="Experience">Experience</TabsTrigger>
+                <TabsTrigger className="text-l font-semibold" value="Skills">Skills</TabsTrigger>
               </TabsList>
 
               <TabsContent value="Education">
@@ -303,13 +303,13 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               City and Country
-                              <Input name="cityAndCountry" value={item.cityAndCountry} onChange={(e) => {
+                              <Input name="cityAndCountry" value={item.cityAndCountry ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, cityAndCountry: e.target.value } : education) })
                               }} />
                             </Label>
                             <Label>
                               Degree
-                              <Input name="degree" value={item.degree} onChange={(e) => {
+                              <Input name="degree" value={item.degree ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, degree: e.target.value } : education) })
                               }} />
                             </Label>
@@ -317,13 +317,13 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               Field of Study
-                              <Input name="fieldOfStudy" value={item.fieldOfStudy} onChange={(e) => {
+                              <Input name="fieldOfStudy" value={item.fieldOfStudy ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, fieldOfStudy: e.target.value } : education) })
                               }} />
                             </Label>
                             <Label>
                               University
-                              <Input name="university" value={item.university} onChange={(e) => {
+                              <Input name="university" value={item.university ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, university: e.target.value } : education) })
                               }} />
                             </Label>
@@ -331,13 +331,13 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               From
-                              <Input name="from" value={item.from} onChange={(e) => {
+                              <Input name="from" value={item.from ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, from: e.target.value } : education) })
                               }} />
                             </Label>
                             <Label>
                               To
-                              <Input name="to" value={item.to} onChange={(e) => {
+                              <Input name="to" value={item.to ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, to: e.target.value } : education) })
                               }} />
                             </Label>
@@ -388,33 +388,33 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               City and Country
-                              <Input name="cityAndCountry" value={item.cityAndCountry} onChange={(e) => {
+                              <Input name="cityAndCountry" value={item.cityAndCountry ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, cityAndCountry: e.target.value } : exp) });
                               }} />
                             </Label>
                             <Label>
                               Company
-                              <Input name="company" value={item.company} onChange={(e) => {
+                              <Input name="company" value={item.company ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, company: e.target.value } : exp) });
                               }} />
                             </Label>
                           </div>
                           <Label>
                             Position
-                            <Input name="position" value={item.position} onChange={(e) => {
+                            <Input name="position" value={item.position ?? ''} onChange={(e) => {
                               setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, position: e.target.value } : exp) });
                             }} />
                           </Label>
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               From
-                              <Input name="from" value={item.from} onChange={(e) => {
+                              <Input name="from" value={item.from ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, from: e.target.value } : exp) });
                               }} />
                             </Label>
                             <Label>
                               To
-                              <Input name="to" value={item.to} onChange={(e) => {
+                              <Input name="to" value={item.to ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, to: e.target.value } : exp) });
                               }} />
                             </Label>
@@ -442,7 +442,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                       variant="default"
                       className="mt-4"
                       onClick={() => {
-                        setResumeForm({ ...resumeForm, experience: [...resumeForm.experience, { id: "", cityAndCountry: "", company: "", position: "", from: "", to: "" }] });
+                        setResumeForm({ ...resumeForm, experience: [...resumeForm.experience, { id: "", cityAndCountry: "", company: "", position: "", from: "", to: "", infos: [] }] });
                       }}><PlusCircle size={24} />
                     </Button>
                   </div>
@@ -457,7 +457,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                         <CardContent className="space-y-4 p-4">
                           <Label>
                             Field
-                            <Input name="field" value={item.field} onChange={(e) => {
+                            <Input name="field" value={item.field ?? ''} onChange={(e) => {
                               setResumeForm({ ...resumeForm, skills: resumeForm.skills.map((skill, i) => i === index ? { ...skill, field: e.target.value } : skill) });
                             }} />
                           </Label>

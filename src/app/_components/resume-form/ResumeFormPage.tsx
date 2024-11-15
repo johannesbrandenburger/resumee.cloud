@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { LoadingSpinner } from "~/app/_components/loading/LoadingSpinner";
-import ResumeForm from "./ResumeForm";
+import ResumeForm from "~/app/_components/resume-form/ResumeForm";
 
 interface ResumePageProps {
   slug?: string;
