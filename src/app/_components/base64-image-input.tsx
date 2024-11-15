@@ -32,9 +32,8 @@ export function Base64ImageInput({ value, onChange }: Base64ImageInputProps) {
   }
 
   return (
-    <div className="space-y-2">
-      <Label htmlFor="image-upload">Upload Image</Label>
-      <div className="flex items-center space-x-2">
+    <div className="">
+      <div className="flex items-center">
         <Input
           type="file"
           id="image-upload"
@@ -43,12 +42,9 @@ export function Base64ImageInput({ value, onChange }: Base64ImageInputProps) {
           className="hidden"
           ref={fileInputRef}
         />
-        <Button onClick={handleButtonClick} variant="outline">
+        <Button onClick={handleButtonClick} variant="outline" className="mr-2">
           Choose File
         </Button>
-        <span className="text-sm text-gray-500">
-          {fileName || 'No file chosen'}
-        </span>
       </div>
     </div>
   )
