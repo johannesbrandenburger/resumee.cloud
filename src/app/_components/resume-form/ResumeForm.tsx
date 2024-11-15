@@ -335,7 +335,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
 
       <Card className="m-4">
         <CardHeader>
-          <CardTitle>Your resume is available at: <span className="text-blue-500"><Link href={linkToResume}>{prettierLinkToResume}</Link></span></CardTitle>
+          <CardTitle>Your resume is available at: <span className="text-blue-500 break-words"><Link href={linkToResume}>{prettierLinkToResume}</Link></span></CardTitle>
         </CardHeader>
       </Card>
 
