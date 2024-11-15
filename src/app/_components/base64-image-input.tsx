@@ -8,12 +8,14 @@ import { Label } from "~/app/_components/ui/label"
 interface Base64ImageInputProps {
   value: string
   onChange: (base64: string) => void
+  maxFileSizeMB?: number
 }
 
-export function Base64ImageInput({ value, onChange }: Base64ImageInputProps) {
+export function Base64ImageInput({ value, onChange, maxFileSizeMB }: Base64ImageInputProps) {
   const [fileName, setFileName] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const maxFileSize = maxFileSizeMB || 3
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -24,7 +26,7 @@ export function Base64ImageInput({ value, onChange }: Base64ImageInputProps) {
       reader.onload = (e) => {
         
         // set a filesize limit
-        if (file.size > 3 * 1024 * 1024) {
+        if (file.size > maxFileSize * 1024 * 1024) {
           alert("File size is too large. Please upload a file smaller than 3MB.")
           setIsLoading(false)
           return
