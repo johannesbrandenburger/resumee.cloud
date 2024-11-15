@@ -306,47 +306,47 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 Prename
-                <Input name="preName" value={resumeForm.preName ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, preName: e.target.value })} />
+                <Input name="preName" value={resumeForm.preName ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, preName: e.target.value })} placeholder='Max' />
               </Label>
               <Label>
                 Lastname
-                <Input name="lastName" value={resumeForm.lastName ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, lastName: e.target.value })} />
+                <Input name="lastName" value={resumeForm.lastName ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, lastName: e.target.value })} placeholder='Mustermann' />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 Email
-                <Input name="email" value={resumeForm.email ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, email: e.target.value })} />
+                <Input name="email" value={resumeForm.email ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, email: e.target.value })} placeholder='contanct@max-mustermann.dev' />
               </Label>
               <Label>
                 Telephone
-                <Input name="telephone" value={resumeForm.telephone ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, telephone: e.target.value })} />
+                <Input name="telephone" value={resumeForm.telephone ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, telephone: e.target.value })} placeholder='+49 123 4567890' />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 City and Country
-                <Input name="cityAndCountry" value={resumeForm.cityAndCountry ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, cityAndCountry: e.target.value })} />
+                <Input name="cityAndCountry" value={resumeForm.cityAndCountry ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, cityAndCountry: e.target.value })} placeholder='Konstanz, Germany' />
               </Label>
               <Label>
                 Website
-                <Input name="website" value={resumeForm.website ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, website: e.target.value })} />
+                <Input name="website" value={resumeForm.website ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, website: e.target.value })} placeholder='max-mustermann.dev' />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Label>
                 GitHub
-                <Input name="github" value={resumeForm.github ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, github: e.target.value })} />
+                <Input name="github" value={resumeForm.github ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, github: e.target.value })} placeholder='github.com/max-mustermann' />
               </Label>
               <Label>
                 LinkedIn
-                <Input name="linkedin" value={resumeForm.linkedin ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, linkedin: e.target.value })} />
+                <Input name="linkedin" value={resumeForm.linkedin ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, linkedin: e.target.value })} placeholder='linkedin.com/in/max-mustermann' />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4">
               <Label>
                 Objective
-                <Textarea name="objective" value={resumeForm.objective ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, objective: e.target.value })} />
+                <Textarea name="objective" value={resumeForm.objective ?? ''} onChange={(e) => setResumeForm({ ...resumeForm, objective: e.target.value })} placeholder="I'm Max Mustermann, a software engineer with a passion for web development..." />
               </Label>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -387,13 +387,13 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                               City and Country
                               <Input name="cityAndCountry" value={item.cityAndCountry ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, cityAndCountry: e.target.value } : education) })
-                              }} />
+                              }} placeholder='Konstanz, Germany' />
                             </Label>
                             <Label>
                               Degree
                               <Input name="degree" value={item.degree ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, degree: e.target.value } : education) })
-                              }} />
+                              }} placeholder='Bachelor of Science' />
                             </Label>
                           </div>
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -401,13 +401,13 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                               Field of Study
                               <Input name="fieldOfStudy" value={item.fieldOfStudy ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, fieldOfStudy: e.target.value } : education) })
-                              }} />
+                              }} placeholder='Computer Science' />
                             </Label>
                             <Label>
                               University
                               <Input name="university" value={item.university ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, university: e.target.value } : education) })
-                              }} />
+                              }} placeholder='University of Konstanz' />
                             </Label>
                           </div>
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -415,29 +415,43 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                               From
                               <Input name="from" value={item.from ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, from: e.target.value } : education) })
-                              }} />
+                              }} placeholder='2023' />
                             </Label>
                             <Label>
                               To
                               <Input name="to" value={item.to ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, to: e.target.value } : education) })
-                              }} />
+                              }} placeholder='2026' />
+                            </Label>
+                            <Label>
+                              Expected (leave empty if already finished)
+                              <Input name="expected" value={item.expected ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, expected: e.target.value } : education) })
+                              }} placeholder='2026' />
                             </Label>
                           </div>
+                          <Label>
+                            Thesis
+                            <Input name="thesis" value={item.thesis ?? ''} onChange={(e) => {
+                              setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, thesis: e.target.value } : education) })
+                            }} placeholder='The impact of AI on society' />
+                          </Label>
+
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               Grade Point Average
                               <Input name="gradePointAverage" value={item.gradePointAverage ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, gradePointAverage: e.target.value } : education) })
-                              }} />
+                              }} placeholder='1.3' />
                             </Label>
                             <Label>
-                              Thesis
-                              <Input name="thesis" value={item.thesis ?? ''} onChange={(e) => {
-                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, thesis: e.target.value } : education) })
-                              }} />
+                              Thesis Grade
+                              <Input name="thesisGrade" value={item.thesisGrade ?? ''} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, thesisGrade: e.target.value } : education) })
+                              }} placeholder='1.0' />
                             </Label>
                           </div>
+
                           <Button variant="destructive" onClick={() => {
                             if (item.id === "") {
                               setResumeForm({ ...resumeForm, education: resumeForm.education.filter((education, i) => i !== index) })
@@ -472,37 +486,37 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                               City and Country
                               <Input name="cityAndCountry" value={item.cityAndCountry ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, cityAndCountry: e.target.value } : exp) });
-                              }} />
+                              }} placeholder='Konstanz, Germany' />
                             </Label>
                             <Label>
                               Company
                               <Input name="company" value={item.company ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, company: e.target.value } : exp) });
-                              }} />
+                              }} placeholder='Google' />
                             </Label>
                           </div>
                           <Label>
                             Position
                             <Input name="position" value={item.position ?? ''} onChange={(e) => {
                               setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, position: e.target.value } : exp) });
-                            }} />
+                            }} placeholder='Software Engineer' />
                           </Label>
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               From
                               <Input name="from" value={item.from ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, from: e.target.value } : exp) });
-                              }} />
+                              }} placeholder='Sep 2023' />
                             </Label>
                             <Label>
                               To
                               <Input name="to" value={item.to ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, to: e.target.value } : exp) });
-                              }} />
+                              }} placeholder='Present' />
                             </Label>
                           </div>
                           <Label>
-                            Infos
+                            Information (Bullet Points)
                             <StringListInput
                               value={item.infos ?? []}
                               onChange={(infos: string[]) => {
@@ -541,7 +555,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                             Field
                             <Input name="field" value={item.field ?? ''} onChange={(e) => {
                               setResumeForm({ ...resumeForm, skills: resumeForm.skills.map((skill, i) => i === index ? { ...skill, field: e.target.value } : skill) });
-                            }} />
+                            }} placeholder='Programming Languages' />
                           </Label>
                           <Label>
                             Entities
@@ -584,13 +598,13 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                               Name
                               <Input name="name" value={item.name ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, name: e.target.value } : project) })
-                              }} />
+                              }} placeholder='resumee.cloud: Online resume generator using Next.js' />
                             </Label>
                             <Label>
                               Description
                               <Textarea name="description" value={item.description ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, description: e.target.value } : project) })
-                              }} />
+                              }} placeholder='This project was created to help developers and other professionals to create their own online resume fast and easy.' />
                             </Label>
                           </div>
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -605,13 +619,13 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                               GitHub
                               <Input name="github" value={item.github ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, github: e.target.value } : project) })
-                              }} />
+                              }} placeholder='github.com/johannesbrandenburger/resumee.cloud' />
                             </Label>
                             <Label>
                               Demo
                               <Input name="demo" value={item.demo ?? ''} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, projects: resumeForm.projects.map((project, i) => i === index ? { ...project, demo: e.target.value } : project) })
-                              }} />
+                              }} placeholder='resumee.cloud' />
                             </Label>
                           </div>
                           <Button variant="destructive" onClick={() => {
