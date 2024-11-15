@@ -11,6 +11,7 @@ import { PlusCircle, Trash2 } from 'lucide-react'
 import { api } from "~/trpc/react"
 import { LoadingSpinner } from '../loading/LoadingSpinner';
 import StringListInput from '../string-list-input';
+import { useQueryState } from 'nuqs'
 
 type ResumeFormProps = {
   slug?: string
@@ -95,6 +96,9 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
     skills: []
   } as ResumeFormState)
   const [isLoading, setIsLoading] = useState(true)
+
+  // url query state for navigation (tabs)
+  const [tab, setTab] = useQueryState("tab", { defaultValue: "Education" })
 
   // Load resume data
   useEffect(() => {
@@ -282,7 +286,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
       <Card className="m-4">
         <CardContent>
           <div>
-            <Tabs defaultValue="Education">
+            <Tabs value={tab} onValueChange={(value) => setTab(value)}>
               <TabsList className="flex space-x-4 mt-4">
                 <TabsTrigger value="Education">Education</TabsTrigger>
                 <TabsTrigger value="Experience">Experience</TabsTrigger>
