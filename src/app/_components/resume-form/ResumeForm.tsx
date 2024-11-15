@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/app/_components/ui/t
 import { PlusCircle, Trash2 } from 'lucide-react'
 import { api } from "~/trpc/react"
 import { LoadingSpinner } from '../loading/LoadingSpinner';
+import StringListInput from '../string-list-input';
 
 type ResumeFormProps = {
   slug?: string
@@ -48,11 +49,14 @@ type ResumeFormState = {
     position: string;
     from: string;
     to: string;
+    infos: string[];
+    flag?: "deleted";
   }[];
   skills: {
     id: string;
     field: string;
     entities: string[];
+    flag?: "deleted";
   }[];
 }
 
@@ -126,6 +130,54 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         if (Object.keys(educationFieldsChanged).length > 0) {
           hasChanges = true
           await updateEducation.mutateAsync({ resumeSlug: slug ?? "", educationId: education.id, education: educationFieldsChanged })
+        }
+      }
+    }
+
+    // update the experience (1. case: a existing experience was updated, 2. case: a new experience was added (id is empty), 3. case: a experience was deleted (flag = "deleted"))
+    for (let experience of resumeForm.experience) {
+      if (experience.flag === "deleted") {
+        hasChanges = true
+        await deleteExperience.mutateAsync({ resumeSlug: slug ?? "", experienceId: experience.id })
+      } else if (experience.id === "") {
+        hasChanges = true
+        await addExperience.mutateAsync({ resumeSlug: slug ?? "", experience: { ...experience, id: undefined } })
+      } else {
+        let experienceFieldsChanged = {}
+        const prevExperience = resume?.experience.find((e) => e.id === experience.id)
+        for (let key in experience) {
+          if (["id", "flag", "resumeId"].includes(key)) continue
+          if (experience[key] !== prevExperience[key]) {
+            experienceFieldsChanged[key] = experience[key]
+          }
+        }
+        if (Object.keys(experienceFieldsChanged).length > 0) {
+          hasChanges = true
+          await updateExperience.mutateAsync({ resumeSlug: slug ?? "", experienceId: experience.id, experience: experienceFieldsChanged })
+        }
+      }
+    }
+
+    // update the skills (1. case: a existing skill was updated, 2. case: a new skill was added (id is empty), 3. case: a skill was deleted (flag = "deleted"))
+    for (let skill of resumeForm.skills) {
+      if (skill.flag === "deleted") {
+        hasChanges = true
+        await deleteSkillGroup.mutateAsync({ resumeSlug: slug ?? "", skillGroupId: skill.id })
+      } else if (skill.id === "") {
+        hasChanges = true
+        await addSkillGroup.mutateAsync({ resumeSlug: slug ?? "", skillGroup: { ...skill, id: undefined } })
+      } else {
+        let skillFieldsChanged = {}
+        const prevSkill = resume?.skills.find((s) => s.id === skill.id)
+        for (let key in skill) {
+          if (["id", "flag", "resumeId"].includes(key)) continue
+          if (skill[key] !== prevSkill[key]) {
+            skillFieldsChanged[key] = skill[key]
+          }
+        }
+        if (Object.keys(skillFieldsChanged).length > 0) {
+          hasChanges = true
+          await updateSkillGroup.mutateAsync({ resumeSlug: slug ?? "", skillGroupId: skill.id, skillGroup: skillFieldsChanged })
         }
       }
     }
@@ -275,13 +327,13 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <Label>
                               From
-                              <Input type="date" name="from" value={item.from} onChange={(e) => {
+                              <Input name="from" value={item.from} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, from: e.target.value } : education) })
                               }} />
                             </Label>
                             <Label>
                               To
-                              <Input type="date" name="to" value={item.to} onChange={(e) => {
+                              <Input name="to" value={item.to} onChange={(e) => {
                                 setResumeForm({ ...resumeForm, education: resumeForm.education.map((education, i) => i === index ? { ...education, to: e.target.value } : education) })
                               }} />
                             </Label>
@@ -317,6 +369,118 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                       className="mt-4"
                       onClick={() => {
                         setResumeForm({ ...resumeForm, education: [...resumeForm.education, { id: "", cityAndCountry: "", degree: "", fieldOfStudy: "", university: "", from: "", to: "", gradePointAverage: "", thesis: "", thesisGrade: "", expected: "" }] })
+                      }}><PlusCircle size={24} />
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="Experience">
+                <div>
+                  {resumeForm.experience.map((item, index) => {
+                    if (item.flag === "deleted") return null;
+                    return (
+                      <Card key={index} className="mt-4">
+                        <CardContent className="space-y-4 p-4">
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Label>
+                              City and Country
+                              <Input name="cityAndCountry" value={item.cityAndCountry} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, cityAndCountry: e.target.value } : exp) });
+                              }} />
+                            </Label>
+                            <Label>
+                              Company
+                              <Input name="company" value={item.company} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, company: e.target.value } : exp) });
+                              }} />
+                            </Label>
+                          </div>
+                          <Label>
+                            Position
+                            <Input name="position" value={item.position} onChange={(e) => {
+                              setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, position: e.target.value } : exp) });
+                            }} />
+                          </Label>
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Label>
+                              From
+                              <Input name="from" value={item.from} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, from: e.target.value } : exp) });
+                              }} />
+                            </Label>
+                            <Label>
+                              To
+                              <Input name="to" value={item.to} onChange={(e) => {
+                                setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, to: e.target.value } : exp) });
+                              }} />
+                            </Label>
+                          </div>
+                          <Label>
+                            Infos
+                            <StringListInput
+                              value={item.infos ?? []}
+                              onChange={(infos: string[]) => {
+                                setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, infos } : exp) });
+                              }}
+                            />
+                          </Label>
+                          <Button variant="destructive" onClick={() => {
+                            setResumeForm({ ...resumeForm, experience: resumeForm.experience.map((exp, i) => i === index ? { ...exp, flag: 'deleted' } : exp) });
+                          }}>
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                  <div className="flex justify-center">
+                    <Button
+                      variant="default"
+                      className="mt-4"
+                      onClick={() => {
+                        setResumeForm({ ...resumeForm, experience: [...resumeForm.experience, { id: "", cityAndCountry: "", company: "", position: "", from: "", to: "" }] });
+                      }}><PlusCircle size={24} />
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="Skills">
+                <div>
+                  {resumeForm.skills.map((item, index) => {
+                    if (item.flag === "deleted") return null;
+                    return (
+                      <Card key={index} className="mt-4">
+                        <CardContent className="space-y-4 p-4">
+                          <Label>
+                            Field
+                            <Input name="field" value={item.field} onChange={(e) => {
+                              setResumeForm({ ...resumeForm, skills: resumeForm.skills.map((skill, i) => i === index ? { ...skill, field: e.target.value } : skill) });
+                            }} />
+                          </Label>
+                          <Label>
+                            Entities
+                            <StringListInput
+                              value={item.entities ?? []}
+                              onChange={(entities: string[]) => {
+                                setResumeForm({ ...resumeForm, skills: resumeForm.skills.map((skill, i) => i === index ? { ...skill, entities } : skill) });
+                              }}
+                            />
+                          </Label>
+                          <Button variant="destructive" onClick={() => {
+                            setResumeForm({ ...resumeForm, skills: resumeForm.skills.map((skill, i) => i === index ? { ...skill, flag: 'deleted' } : skill) });
+                          }}>
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                  <div className="flex justify-center">
+                    <Button
+                      variant="default"
+                      className="mt-4"
+                      onClick={() => {
+                        setResumeForm({ ...resumeForm, skills: [...resumeForm.skills, { id: "", field: "", entities: [] }] });
                       }}><PlusCircle size={24} />
                     </Button>
                   </div>
