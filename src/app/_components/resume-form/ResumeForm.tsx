@@ -121,14 +121,27 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         await deleteEducation.mutateAsync({ resumeSlug: slug ?? "", educationId: education.id })
       } else if (education.id === "") {
         hasChanges = true
-        await addEducation.mutateAsync({ resumeSlug: slug ?? "", education: { ...education, id: undefined } })
+        await addEducation.mutateAsync({ resumeSlug: slug ?? "", education: { ...education } })
       } else {
-        let educationFieldsChanged = {}
+        type EducationFields = {
+          cityAndCountry?: string;
+          degree?: string;
+          fieldOfStudy?: string;
+          university?: string;
+          from?: string;
+          to?: string;
+          gradePointAverage?: string;
+          thesis?: string;
+          thesisGrade?: string;
+          expected?: string;
+        }
+        let educationFieldsChanged: EducationFields = {}
         const prevEducation = resume?.education.find((e) => e.id === education.id)
         for (let key in education) {
           if (["id", "flag", "resumeId"].includes(key)) continue
-          if (education[key] !== prevEducation[key]) {
-            educationFieldsChanged[key] = education[key]
+          const typedKey = key as keyof EducationFields;
+          if (education[typedKey] !== (prevEducation as typeof education | undefined)?.[typedKey]) {
+            educationFieldsChanged[typedKey] = education[typedKey] === null ? undefined : education[typedKey]
           }
         }
         if (Object.keys(educationFieldsChanged).length > 0) {
@@ -145,14 +158,27 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
         await deleteExperience.mutateAsync({ resumeSlug: slug ?? "", experienceId: experience.id })
       } else if (experience.id === "") {
         hasChanges = true
-        await addExperience.mutateAsync({ resumeSlug: slug ?? "", experience: { ...experience, id: undefined } })
+        await addExperience.mutateAsync({ resumeSlug: slug ?? "", experience: { ...experience } })
       } else {
-        let experienceFieldsChanged = {}
+        type ExperienceFields = {
+          cityAndCountry?: string;
+          company?: string;
+          position?: string;
+          from?: string;
+          to?: string;
+          infos?: string[];
+        }
+        let experienceFieldsChanged: ExperienceFields = {}
         const prevExperience = resume?.experience.find((e) => e.id === experience.id)
         for (let key in experience) {
           if (["id", "flag", "resumeId"].includes(key)) continue
-          if (experience[key] !== prevExperience[key]) {
-            experienceFieldsChanged[key] = experience[key]
+          const typedKey = key as keyof ExperienceFields;
+          if (experience[typedKey] !== (prevExperience as typeof experience | undefined)?.[typedKey]) {
+            if (typedKey === 'infos') {
+              experienceFieldsChanged[typedKey] = experience[typedKey] === null ? undefined : experience[typedKey] as string[];
+            } else {
+              experienceFieldsChanged[typedKey] = experience[typedKey] === null ? undefined : experience[typedKey] as string;
+            }
           }
         }
         if (Object.keys(experienceFieldsChanged).length > 0) {
