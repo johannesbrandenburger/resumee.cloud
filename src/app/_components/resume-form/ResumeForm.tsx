@@ -72,6 +72,7 @@ type ResumeFormState = {
     demo: string | null;
     flag?: "deleted";
   }[];
+  extracurricular: string[];
 }
 
 export default function ResumeForm({ slug }: ResumeFormProps = {}) {
@@ -106,7 +107,8 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
     education: [],
     experience: [],
     skills: [],
-    projects: []
+    projects: [],
+    extracurricular: []
   } as ResumeFormState)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -373,6 +375,7 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                 <TabsTrigger className="text-l font-semibold" value="Experience">Experience</TabsTrigger>
                 <TabsTrigger className="text-l font-semibold" value="Skills">Skills</TabsTrigger>
                 <TabsTrigger className="text-l font-semibold" value="Projects">Projects</TabsTrigger>
+                <TabsTrigger className="text-l font-semibold" value="Extracurricular Activities">Extracurricular Activities</TabsTrigger>
               </TabsList>
 
               <TabsContent value="Education">
@@ -644,6 +647,16 @@ export default function ResumeForm({ slug }: ResumeFormProps = {}) {
                       }}><PlusCircle size={24} />
                     </Button>
                   </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="Extracurricular Activities">
+                <div>
+                  <StringListInput
+                    value={resumeForm.extracurricular}
+                    onChange={(extracurricular: string[]) => {
+                      setResumeForm({ ...resumeForm, extracurricular })
+                    }}
+                  />
                 </div>
               </TabsContent>
             </Tabs>

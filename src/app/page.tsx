@@ -5,8 +5,6 @@ import { ResumeViewerPage } from "~/app/_components/resume-viewer/ResumeViewerPa
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 import ResumeForm from "./_components/resume-form/ResumeForm";
-import { Input } from "./_components/ui/input";
-import { Button } from "./_components/ui/button";
 import { NewSlugForm } from "./_components/NewSlugForm";
 
 export default async function Home() {
