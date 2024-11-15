@@ -21,14 +21,14 @@ type ResumeFormState = {
   preName: string
   lastName: string
   email: string
-  telephone?: string
-  cityAndCountry?: string
-  github?: string
-  linkedin?: string
-  website?: string
-  objective?: string
-  domain?: string
-  impressum?: string,
+  telephone: string | null
+  cityAndCountry: string | null
+  github: string | null
+  linkedin: string | null
+  website: string | null
+  objective: string | null
+  domain: string | null
+  impressum: string | null
   education: {
     id: string;
     cityAndCountry: string;
