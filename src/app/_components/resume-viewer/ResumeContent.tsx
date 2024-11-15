@@ -9,6 +9,7 @@ import Skills from "~/app/_components/skills";
 import ContactButtons from "~/app/_components/contact-buttons";
 import ImpressumButton from "~/app/_components/impressum-button";
 import ExtracurricularActivities from "~/app/_components/extracurricular-activities";
+import { GithubContributionGraph } from "~/app/_components/github-contribution-graph";
 import { api } from "~/trpc/react";
 
 interface ResumeContentProps {
@@ -57,6 +58,7 @@ export const ResumeContent = ({ user }: ResumeContentProps) => {
         <SectionHeading visible={data.projects?.length > 0}>
           Projects
         </SectionHeading>
+        <GithubContributionGraph username={data.github?.replace("https://", "").replace("http://", "").replace("github.com/", "").replace("/", "")} />
         <ProjectCards items={data.projects} />
 
         <SectionHeading visible={data.extracurricular?.length > 0}>
@@ -66,7 +68,6 @@ export const ResumeContent = ({ user }: ResumeContentProps) => {
           extracurricularActivities={data.extracurricular} 
         />
 
-        <ImpressumButton link={data.impressum} />
       </div>
     </BackgroundAnimation>
   );
